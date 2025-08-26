@@ -1,42 +1,29 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
+import React from "react";
+import { View, Button, Linking, Alert } from "react-native";
 
-export default function Um() {
+export default function App() {
+  const videoId = "dQw4w9WgXcQ"; // ID do vídeo no YouTube
+  const youtubeAppUrl = vnd.youtube//${videoId};
+  const youtubeWebUrl = https//www.youtube.com/watch?v=${videoId};
+
+  const openYouTube = async () => {
+    try {
+      // Primeiro tenta abrir no app do YouTube
+      const supported = await Linking.canOpenURL(youtubeAppUrl);
+      if (supported) {
+        await Linking.openURL(youtubeAppUrl);
+      } else {
+        // Se não tiver app, abre no navegador
+        await Linking.openURL(youtubeWebUrl);
+      }
+    } catch (err) {
+      Alert.alert("Erro", "Não foi possível abrir o YouTube.");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Parte de cima dividida em 2 colunas */}
-      <View style={styles.top}>
-        <View style={styles.left} />
-        <View style={styles.right} />
-      </View>
-
-      {/* Parte de baixo */}
-      <View style={styles.bottom} />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Button title="Abrir vídeo no YouTube" onPress={openYouTube} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: Constants.statusBarHeight,
-  },
-  top: {
-    flex: 0.5,
-    flexDirection: 'row', // filhos em linha (lado a lado)
-  },
-  left: {
-    flex: 0.5,
-    backgroundColor: 'lime',
-  },
-  right: {
-    flex: 0.5,
-    backgroundColor: 'aquamarine',
-  },
-  bottom: {
-    flex: 0.5,
-    backgroundColor: 'salmon',
-  },
-});
