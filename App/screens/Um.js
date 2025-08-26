@@ -1,28 +1,57 @@
-import React from "react";
-import { View, Button, Linking, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, PermissionsAndroid, Platform } from "react-native";
+import Contacts from "react-native-contacts";
 
 export default function App() {
-  const instagramUrl = "https://www.instagram.com/fatec_jacarei";
-  const instagramAppUrl = "instagram://user?username=fatec_jacarei"; // abre no app, se instalado
+  const [contacts, setContacts] = useState([]);
 
-  const openInstagram = async () => {
-    try {
-      // Tenta abrir no aplicativo do Instagram
-      const supported = await Linking.canOpenURL(instagramAppUrl);
-      if (supported) {
-        await Linking.openURL(instagramAppUrl);
+  useEffect(() => {
+    const getContacts = async () => {
+      if (Platform.OS === "android") {
+        const permission = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+        );
+
+        if (permission === PermissionsAndroid.RESULTS.GRANTED) {
+          Contacts.getAll().then(data => {
+            if (data.length > 0) {
+              // 🔹 Filtra os contatos cujo nome começa com "C"
+              const filtered = data.filter(contact =>
+                contact.displayName?.toUpperCase().startsWith("C")
+              );
+              setContacts(filtered);
+            }
+          });
+        }
       } else {
-        // Se não estiver instalado, abre no navegador
-        await Linking.openURL(instagramUrl);
+        Contacts.getAll().then(data => {
+          if (data.length > 0) {
+            const filtered = data.filter(contact =>
+              contact.displayName?.toUpperCase().startsWith("C")
+            );
+            setContacts(filtered);
+          }
+        });
       }
-    } catch (err) {
-      Alert.alert("Erro", "Não foi possível abrir o Instagram.");
-    }
-  };
+    };
+
+    getContacts();
+  }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button title="Abrir Fatec Jacareí no Instagram" onPress={openInstagram} />
+    <View style={{ flex: 1, padding: 20 }}>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+        Contatos que começam com "C"
+      </Text>
+      <FlatList
+        data={contacts}
+        keyExtractor={(item) => item.recordID}
+        renderItem={({ item }) => (
+          <Text style={{ fontSize: 16, marginVertical: 5 }}>
+            {item.displayName}
+          </Text>
+        )}
+      />
     </View>
   );
 }
