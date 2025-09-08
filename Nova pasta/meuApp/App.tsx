@@ -1,17 +1,17 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import { SafeAreaView, View, Text, useWindowDimensions } from "react-native";
+import stylesPortrait from "./stylesPortrait";
+import stylesLandscape from "./stylesLandscape";
 
 export default function App() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
+  // seleciona os estilos de acordo com a orientação
+  const styles = isLandscape ? stylesLandscape : stylesPortrait;
+
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { flexDirection: isLandscape ? "row" : "column" },
-      ]}
-    >
+    <SafeAreaView style={styles.container}>
       <View style={styles.top}>
         <Text>Top</Text>
       </View>
@@ -26,27 +26,3 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  top: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFA07A",
-  },
-  middle: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FA8072",
-  },
-  bottom: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FF6347",
-  },
-});
