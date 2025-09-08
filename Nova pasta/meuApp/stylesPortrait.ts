@@ -5,23 +5,26 @@ const stylesPortrait = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
   },
-  top: {
-    flex: 1,
-    justifyContent: "center",
+  header: {
+    padding: 12,
     alignItems: "center",
-    backgroundColor: "#FFA07A", // Laranja claro
+    backgroundColor: "#FFA07A",
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
   middle: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FA8072", // Vermelho salmão
+    backgroundColor: "#FA8072",
   },
   bottom: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF6347", // Tomate
+    backgroundColor: "#FF6347",
   },
 });
 

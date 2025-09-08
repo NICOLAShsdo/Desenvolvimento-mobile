@@ -7,15 +7,16 @@ export default function App() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
-  // seleciona os estilos de acordo com a orientação
   const styles = isLandscape ? stylesLandscape : stylesPortrait;
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.top}>
-        <Text>Top</Text>
+      {/* Header fixo */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Exercício 4</Text>
       </View>
 
+      {/* Só Middle e Bottom */}
       <View style={styles.middle}>
         <Text>Middle</Text>
       </View>
