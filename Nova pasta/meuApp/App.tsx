@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,8 +8,11 @@ import {
   useWindowDimensions,
   StyleSheet,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import stylesPortrait from "./stylesPortrait";
 import stylesLandscape from "./stylesLandscape";
+
+const STORAGE_KEY = "@names_list";
 
 export default function App() {
   const { width, height } = useWindowDimensions();
@@ -19,6 +22,33 @@ export default function App() {
 
   const [name, setName] = useState("");
   const [names, setNames] = useState<string[]>([]);
+
+  // Carregar nomes do AsyncStorage
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          setNames(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.log("Erro ao carregar nomes:", error);
+      }
+    };
+    loadData();
+  }, []);
+
+  // Salvar sempre que a lista mudar
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(names));
+      } catch (error) {
+        console.log("Erro ao salvar nomes:", error);
+      }
+    };
+    saveData();
+  }, [names]);
 
   const handleAddName = () => {
     if (name.trim() !== "") {
@@ -31,7 +61,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Exercício 5</Text>
+        <Text style={styles.headerText}>Exercício 6</Text>
       </View>
 
       {/* Input */}
@@ -44,7 +74,7 @@ export default function App() {
         onSubmitEditing={handleAddName}
       />
 
-      {/* Lista */}
+      {/* Lista persistida */}
       <FlatList
         data={names}
         keyExtractor={(item, index) => index.toString()}
@@ -53,7 +83,7 @@ export default function App() {
         )}
       />
 
-      {/* Mantém Middle e Bottom */}
+      {/* Middle e Bottom */}
       <View style={styles.middle}>
         <Text>Middle</Text>
       </View>
